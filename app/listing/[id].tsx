@@ -1,12 +1,15 @@
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-const DetailPage = () => {
+const ListingDetail = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  console.log('id', id);
   return (
     <View>
-      <Text>DetailPage</Text>
+      <Text>{id}</Text>
     </View>
   );
 };
 
-export default DetailPage;
+export default ListingDetail;
