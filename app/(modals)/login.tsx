@@ -33,8 +33,8 @@ const Login = () => {
     try {
       const { createdSessionId, setActive } = await selectedAuth();
 
-      if (createdSessionId) {
-        setActive!({ session: createdSessionId });
+      if (createdSessionId && setActive) {
+        setActive({ session: createdSessionId });
         router.back();
       }
     } catch (err) {
