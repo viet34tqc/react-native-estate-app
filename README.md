@@ -1,6 +1,6 @@
 # React native estate app
 
-This is my first demo app using react native and expo
+This is my first demo app using react native and expo.
 
 ## Tech stack
 

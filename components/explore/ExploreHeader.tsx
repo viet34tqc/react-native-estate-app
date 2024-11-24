@@ -1,3 +1,4 @@
+import Colors from '@/constants/Colors';
 import { Categories } from '@/constants/commons';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -11,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 type Props = {
   onCategoryChanged: (category: string) => void;
