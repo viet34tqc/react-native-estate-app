@@ -25,9 +25,13 @@ function ExploreHeader({ onCategoryChanged }: Props) {
   const selectCategory = (index: number) => {
     const selected = itemsRef.current[index];
     setActiveIndex(index);
+
+    // Measure the current item location and scroll to it
     selected?.measure(x => {
       scrollRef.current?.scrollTo({ x: x - 16, y: 0, animated: true });
     });
+
+    // Add vibration when press
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(Categories[index].name);
   };
@@ -69,7 +73,7 @@ function ExploreHeader({ onCategoryChanged }: Props) {
             key={index}
             style={
               activeIndex === index
-                ? styles.categoriesBtnActive
+                ? { ...styles.categoriesBtn, ...styles.categoriesBtnActive }
                 : styles.categoriesBtn
             }
             onPress={() => selectCategory(index)}
@@ -82,7 +86,7 @@ function ExploreHeader({ onCategoryChanged }: Props) {
             <Text
               style={
                 activeIndex === index
-                  ? styles.categoryTextActive
+                  ? { ...styles.categoryText, ...styles.categoryTextActive }
                   : styles.categoryText
               }
             >
@@ -98,11 +102,12 @@ function ExploreHeader({ onCategoryChanged }: Props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    height: 130,
+    height: 150,
     elevation: 2, // Add a drop shadow to the container
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
+    paddingBlock: 6,
     shadowOffset: {
       width: 1,
       height: 10,
@@ -114,6 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 24,
     paddingBottom: 16,
+    gap: 16,
   },
 
   searchBtn: {
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 14,
     alignItems: 'center',
-    width: 280,
+    width: 260,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#c2c2c2',
     borderRadius: 30,
@@ -130,10 +136,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.12,
     shadowRadius: 8,
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
   },
   filterBtn: {
     padding: 10,
@@ -147,8 +149,6 @@ const styles = StyleSheet.create({
     color: Colors.grey,
   },
   categoryTextActive: {
-    fontSize: 14,
-    fontFamily: 'mon-sb',
     color: '#000',
   },
   categoriesBtn: {
@@ -158,12 +158,8 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   categoriesBtnActive: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderBottomColor: '#000',
     borderBottomWidth: 2,
-    paddingBottom: 8,
   },
 });
 
