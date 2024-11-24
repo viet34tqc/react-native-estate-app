@@ -1,4 +1,4 @@
-## React native estate app
+# React native estate app
 
 This is my first demo app using react native and expo
 
