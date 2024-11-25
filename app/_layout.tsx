@@ -90,13 +90,19 @@ function RootLayoutNav() {
           },
           animation: 'slide_from_bottom',
           headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ padding: 4 }}
+            >
               <Ionicons name="close-outline" size={28} />
             </TouchableOpacity>
           ),
         }}
       />
-      <Stack.Screen name="listing/[id]" options={{ headerTitle: '' }} />
+      <Stack.Screen
+        name="listing/[id]"
+        options={{ headerTitle: '', headerTransparent: true }}
+      />
     </Stack>
   );
 }

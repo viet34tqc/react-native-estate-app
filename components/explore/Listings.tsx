@@ -49,9 +49,20 @@ const Listings = ({ category }: Props) => {
             <Ionicons name="heart-outline" size={24} color="#000" />
           </TouchableOpacity>
           <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 2,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
-            <Text style={{ fontSize: 16, fontFamily: 'mon-sb' }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: 'mon-sb',
+              }}
+            >
               {item.name}
             </Text>
             <View style={{ flexDirection: 'row', gap: 4 }}>

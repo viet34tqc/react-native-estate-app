@@ -13,3 +13,9 @@ This is my first demo app using react native and expo.
 ## Feature
 
 - Authentication: using Clerk
+
+## What I learnt
+
+- Methods
+  - Using `mesure()` method to get the location of the `View`. This is similar to `getBoundingClientRect`
+  - Using `Dimension.get('window').width` to get the width of window

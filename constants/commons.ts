@@ -28,3 +28,5 @@ export const Categories = [
     icon: 'nature-people',
   },
 ];
+
+export const LISTING_DETAIL_IMG_HEIGHT = 300
