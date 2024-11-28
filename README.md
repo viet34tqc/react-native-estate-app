@@ -16,6 +16,7 @@ This is my first demo app using react native and expo.
 
 ## What I learnt
 
+- Using 'react-native-reanimated' library
 - Methods
   - Using `mesure()` method to get the location of the `View`. This is similar to `getBoundingClientRect`
   - Using `Dimension.get('window').width` to get the width of window

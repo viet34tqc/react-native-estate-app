@@ -1,11 +1,25 @@
 import listingData from '@/assets/data/airbnb-listings.json';
 import Colors from '@/constants/Colors';
 import { LISTING_DETAIL_IMG_HEIGHT } from '@/constants/commons';
+import { defaultStyles } from '@/constants/DefaultStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import React, { useLayoutEffect } from 'react';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Animated, {
+  interpolate,
+  SlideInDown,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useScrollViewOffset,
+} from 'react-native-reanimated';
 
 const width = Dimensions.get('window').width;
 
@@ -14,15 +28,91 @@ const ListingDetail = () => {
   const listing = (listingData as Record<string, any>[]).find(
     item => item.id === id
   );
+  const navigation = useNavigation();
+
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollOffset = useScrollViewOffset(scrollRef);
+
+  useLayoutEffect(() => {
+    // Customize the default header of the page
+    navigation.setOptions({
+      headerBackground: () => (
+        <Animated.View
+          style={[headerAnimatedStyle, styles.header]}
+        ></Animated.View>
+      ),
+      headerRight: () => (
+        <View style={styles.bar}>
+          <TouchableOpacity style={styles.roundButton}>
+            <Ionicons name="share-outline" size={22} color={'#000'} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.roundButton}>
+            <Ionicons name="heart-outline" size={22} color={'#000'} />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.roundButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color={'#000'} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  // Paralax header image
+  const imageAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [
+              -LISTING_DETAIL_IMG_HEIGHT,
+              0,
+              LISTING_DETAIL_IMG_HEIGHT,
+              LISTING_DETAIL_IMG_HEIGHT,
+            ],
+            [
+              -LISTING_DETAIL_IMG_HEIGHT / 2,
+              0,
+              LISTING_DETAIL_IMG_HEIGHT * 0.75,
+            ]
+          ),
+        },
+      ],
+    };
+  });
+
+  // When scroll, the header transition from transparent to opaque
+  // scrollOffset.value = 0 => opacity: 0
+  // scrollOffset.value = LISTING_DETAIL_IMG_HEIGHT / 1.5 => opacity: 1
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        scrollOffset.value,
+        [0, LISTING_DETAIL_IMG_HEIGHT / 1.5],
+        [0, 1]
+      ),
+    };
+  }, []);
 
   if (!listing) return <Text>Listing not found</Text>;
 
   return (
     <View style={styles.container}>
-      <Animated.ScrollView>
+      {/* This must be Animated scroll view because useScrollViewOffset requires  */}
+      <Animated.ScrollView
+        ref={scrollRef}
+        // Add some bottom padding to scroll view, using `style` doesn't work
+        // This value must be higher than the height of the footer
+        contentContainerStyle={{ paddingBottom: 120 }}
+      >
         <Animated.Image
           source={{ uri: listing?.xl_picture_url }}
-          style={styles.image}
+          style={[styles.image, imageAnimatedStyle]}
         />
 
         <View style={styles.infoContainer}>
@@ -62,6 +152,30 @@ const ListingDetail = () => {
           <Text style={styles.description}>{listing.description}</Text>
         </View>
       </Animated.ScrollView>
+
+      <Animated.View
+        style={defaultStyles.footer}
+        entering={SlideInDown.delay(300)}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <TouchableOpacity style={styles.footerText}>
+            <Text style={styles.footerPrice}>€{listing.price}</Text>
+            <Text>night</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[defaultStyles.btn, { paddingRight: 20, paddingLeft: 20 }]}
+          >
+            <Text style={defaultStyles.btnText}>Reserve</Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
     </View>
   );
 };
