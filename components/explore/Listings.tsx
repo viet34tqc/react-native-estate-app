@@ -1,10 +1,14 @@
 import listingsData from '@/assets/data/airbnb-listings.json';
 import { defaultStyles } from '@/constants/DefaultStyles';
+import { Listing } from '@/libs/types';
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
 import {
-  FlatList,
+  BottomSheetFlatList,
+  BottomSheetFlatListMethods,
+} from '@gorhom/bottom-sheet';
+import { Link } from 'expo-router';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import {
   ListRenderItem,
   StyleSheet,
   Text,
@@ -14,12 +18,22 @@ import {
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 
 interface Props {
+  refresh: number;
   category: string;
 }
 
-const Listings = ({ category }: Props) => {
-  const items = useMemo(() => listingsData as Record<string, any>[], []);
+const Listings = ({ category, refresh }: Props) => {
+  const listRef = useRef<BottomSheetFlatListMethods>(null);
+  const items = useMemo(() => listingsData as Listing[], []);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // This feature makes the app crash on expo android
+  // // Update the view to scroll the list back top
+  // useEffect(() => {
+  //   if (refresh) {
+  //     listRef.current?.scrollToOffset({ offset: 0, animated: true });
+  //   }
+  // }, [refresh]);
 
   // Use for "updating" the views data after category changed
   useEffect(() => {
@@ -84,7 +98,8 @@ const Listings = ({ category }: Props) => {
 
   return (
     <View style={defaultStyles.container}>
-      <FlatList
+      <BottomSheetFlatList
+        ref={listRef}
         style={{ paddingTop: 20 }}
         renderItem={renderRow}
         data={loading ? [] : items}
